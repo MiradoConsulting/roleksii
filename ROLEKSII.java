@@ -1,4 +1,5 @@
 import robocode.*;
+import robocode.util.Utils;
 //import java.awt.Color;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
@@ -54,7 +55,7 @@ public class ROLEKSII extends Robot
         turnGunRightRadians(Utils.normalRelativeAngle(angleToEnemy - getGunHeadingRadians()));
     }
 
-    private long getTime() {
+    public long getTime() {
         return getTime() / 1000;
     }
 }
