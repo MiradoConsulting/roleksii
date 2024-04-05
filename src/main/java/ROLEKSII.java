@@ -17,7 +17,12 @@ public class ROLEKSII extends AdvancedRobot {
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        double enemyAbsoluteBearing = getHeadingRadians() + e.getBearingRadians();
+          // Get the name of the scanned robot
+        String scannedRobotName = e.getName();
+
+        // Check if the scanned robot is the one you want to target
+        if (scannedRobotName.equals("LuckyBot")) {
+            double enemyAbsoluteBearing = getHeadingRadians() + e.getBearingRadians();
         double enemyDistance = e.getDistance();
         double enemyHeading = e.getHeadingRadians();
         double enemyVelocity = e.getVelocity();
@@ -43,5 +48,6 @@ public class ROLEKSII extends AdvancedRobot {
         // Radar lock on target
         double radarTurn = getHeadingRadians() + e.getBearingRadians() - getRadarHeadingRadians();
         setTurnRadarRightRadians(1.9 * normalRelativeAngleDegrees(radarTurn));
+        }
     }
 }
