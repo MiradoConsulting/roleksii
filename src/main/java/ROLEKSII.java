@@ -9,11 +9,11 @@ import java.awt.*;
 public class ROLEKSII extends Robot {
 
 	public void run() {
-		// setBodyColor(Color.red);
-		// setGunColor(Color.black);
-		// setRadarColor(Color.yellow);
-		// setBulletColor(Color.green);
-		// setScanColor(Color.green);
+		setBodyColor(Color.black);
+		setGunColor(Color.red);
+		setRadarColor(Color.green);
+		setBulletColor(Color.yellow);
+		setScanColor(Color.red);
 
 		// Move to a corner
 		goCorner();
