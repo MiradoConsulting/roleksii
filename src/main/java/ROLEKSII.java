@@ -1,53 +1,56 @@
-import robocode.*;
+import robocode.DeathEvent;
+import robocode.Robot;
+import robocode.ScannedRobotEvent;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
 
-// Extend the AdvancedRobot class from Robocode
-public class ROLEKSII extends AdvancedRobot {
+import java.awt.*;
 
-    public void run() {
-        // Main robot loop
-        while (true) {
-            // Adjust radar and gun independently of robot movement
-            setAdjustRadarForGunTurn(true);
-            setAdjustGunForRobotTurn(true);
-            
-            // Turn the radar to scan for enemies
-            // turnRadarRight(360);
 
-              // Move forward
-            ahead(100);
+public class ROLEKSII extends Robot {
 
-            // Turn right 90 degrees
-            turnRight(90);
-        }
-    }
+	public void run() {
+		// setBodyColor(Color.red);
+		// setGunColor(Color.black);
+		// setRadarColor(Color.yellow);
+		// setBulletColor(Color.green);
+		// setScanColor(Color.green);
 
-    public void onScannedRobot(ScannedRobotEvent e) {
-        double enemyAbsoluteBearing = getHeadingRadians() + e.getBearingRadians();
-        double enemyDistance = e.getDistance();
-        double enemyHeading = e.getHeadingRadians();
-        double enemyVelocity = e.getVelocity();
+		// Move to a corner
+		goCorner();
 
-        // Estimate time for bullet to reach the enemy
-        double bulletPower = Math.min(3, 400 / enemyDistance);
-        double bulletSpeed = 20 - bulletPower * 3;
-        double time = enemyDistance / bulletSpeed;
-        
-        // Predict the enemy's future position
-        double futureX = getX() + Math.sin(enemyAbsoluteBearing) * enemyDistance + Math.sin(enemyHeading) * enemyVelocity * time;
-        double futureY = getY() + Math.cos(enemyAbsoluteBearing) * enemyDistance + Math.cos(enemyHeading) * enemyVelocity * time;
-        
-        // Calculate gun turn to predicted position
-        double gunTurn = normalRelativeAngleDegrees(Math.atan2(futureX - getX(), futureY - getY()) * 180 / Math.PI - getGunHeading());
+		int gunIncrement = 3;
 
-        // Adjust the gun and fire
-        turnGunRight(gunTurn);
-        if (getGunHeat() == 0 && Math.abs(getGunTurnRemaining()) < 10) {
-            fire(bulletPower);
-        }
-        
-        // Radar lock on target
-        double radarTurn = getHeadingRadians() + e.getBearingRadians() - getRadarHeadingRadians();
-        setTurnRadarRightRadians(1.9 * normalRelativeAngleDegrees(radarTurn));
-    }
+		while (true) {
+			turnLeft(90);
+			ahead(5000);
+		}
+	}
+
+	public void goCorner() {
+		turnRight(normalRelativeAngleDegrees(0 - getHeading()));
+		// Move to that wall
+		ahead(5000);
+		// Turn to face the corner
+		turnLeft(90);
+		// Move to the corner
+		ahead(5000);
+		// Turn gun to starting point
+		turnGunLeft(90);
+	}
+
+	public void onScannedRobot(ScannedRobotEvent e) {
+		smartFire(e.getDistance());
+	}
+
+	public void smartFire(double robotDistance) {
+		if (robotDistance > 400) {
+			return;
+		} else if (robotDistance > 200 || getEnergy() < 15) {
+			fire(1);
+		} else if (robotDistance > 50) {
+			fire(2);
+		} else {
+			fire(3);
+		}
+	}
 }
