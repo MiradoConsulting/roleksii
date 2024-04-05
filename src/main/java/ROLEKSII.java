@@ -1,56 +1,35 @@
-import robocode.DeathEvent;
-import robocode.Robot;
-import robocode.ScannedRobotEvent;
-import static robocode.util.Utils.normalRelativeAngleDegrees;
+import robocode.*;
 
-import java.awt.*;
+// CircleBot - a robot that moves in a big circle and shoots enemies
+public class CircleBot extends AdvancedRobot {
 
+    // run method - main method for the robot
+    public void run() {
+        // Set the radar to turn right infinitely
+        setTurnRadarRight(Double.POSITIVE_INFINITY);
 
-public class ROLEKSII extends Robot {
+        // Start moving in a big circle
+        while (true) {
+            // Move forward
+            ahead(100);
 
-	public void run() {
-		setBodyColor(Color.black);
-		setGunColor(Color.red);
-		setRadarColor(Color.green);
-		setBulletColor(Color.yellow);
-		setScanColor(Color.red);
+            // Turn right 10 degrees
+            turnRight(10);
+        }
+    }
 
-		// Move to a corner
-		goCorner();
+    // onScannedRobot method - called when an enemy is detected
+    public void onScannedRobot(ScannedRobotEvent e) {
+        // Calculate the angle to the enemy
+        double angleToEnemy = getHeading() + e.getBearing();
 
-		int gunIncrement = 3;
+        // Calculate the gun turn angle to face the enemy
+        double gunTurnAngle = Utils.normalRelativeAngleDegrees(angleToEnemy - getGunHeading());
 
-		while (true) {
-			turnLeft(90);
-			ahead(5000);
-		}
-	}
+        // Turn the gun to face the enemy
+        turnGunRight(gunTurnAngle);
 
-	public void goCorner() {
-		turnRight(normalRelativeAngleDegrees(0 - getHeading()));
-		// Move to that wall
-		ahead(5000);
-		// Turn to face the corner
-		turnLeft(90);
-		// Move to the corner
-		ahead(5000);
-		// Turn gun to starting point
-		turnGunLeft(90);
-	}
-
-	public void onScannedRobot(ScannedRobotEvent e) {
-		smartFire(e.getDistance());
-	}
-
-	public void smartFire(double robotDistance) {
-		if (robotDistance > 400) {
-			return;
-		} else if (robotDistance > 200 || getEnergy() < 15) {
-			fire(1);
-		} else if (robotDistance > 50) {
-			fire(2);
-		} else {
-			fire(3);
-		}
-	}
+        // Fire at the enemy with maximum power
+        fire(3);
+    }
 }
