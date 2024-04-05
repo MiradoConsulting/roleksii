@@ -1,61 +1,31 @@
 import robocode.*;
-import robocode.util.Utils;
-//import java.awt.Color;
 
-// API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
-
-/**
- * ROLEKSII - a robot by (your name here)
- */
-public class ROLEKSII extends Robot
-{
-	 
-    // Variables to store enemy information
-    private double enemyBearing;
-    private double enemyDistance;
-    private double enemyHeading;
-    private double enemyVelocity;
-    private long lastScanTime;
+public class OLEKSII extends Robot {
 
     public void run() {
         // Initialization code
         while (true) {
             // Move robot
             ahead(100);
+            // Turn gun
             turnGunRight(360);
+            // Turn radar
+            turnRadarRight(360);
         }
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
-        // Update enemy information
-        enemyBearing = e.getBearing();
-        enemyDistance = e.getDistance();
-        enemyHeading = e.getHeadingRadians();
-        enemyVelocity = e.getVelocity();
-        lastScanTime = getTime();
-
-        // Predict enemy position and aim gun
-        predictEnemyPosition();
+        // Fire when an enemy is detected
+        fire(1);
     }
 
-    private void predictEnemyPosition() {
-        // Calculate time to reach predicted position
-        long currentTime = getTime();
-        long deltaTime = currentTime - lastScanTime;
-        double predictedDistance = deltaTime * enemyVelocity;
-
-        // Predict enemy position
-        double enemyX = getX() + Math.sin(enemyHeading) * (enemyDistance + predictedDistance);
-        double enemyY = getY() + Math.cos(enemyHeading) * (enemyDistance + predictedDistance);
-
-        // Calculate angle to enemy
-        double angleToEnemy = Math.atan2(enemyX - getX(), enemyY - getY());
-        
-        // Turn gun to aim at predicted position
-        turnGunRightRadians(Utils.normalRelativeAngle(angleToEnemy - getGunHeadingRadians()));
+    public void onHitByBullet(HitByBulletEvent e) {
+        // Turn robot to avoid being hit by bullets
+        turnRight(90 - e.getBearing());
     }
 
-    public long getTime() {
-        return getTime() / 1000;
+    public void onHitWall(HitWallEvent e) {
+        // Turn robot when hitting a wall
+        turnRight(90);
     }
 }
