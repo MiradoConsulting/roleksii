@@ -12,7 +12,13 @@ public class ROLEKSII extends AdvancedRobot {
             setAdjustGunForRobotTurn(true);
             
             // Turn the radar to scan for enemies
-            turnRadarRight(360);
+            // turnRadarRight(360);
+
+              // Move forward
+            ahead(100);
+
+            // Turn right 90 degrees
+            turnRight(90);
         }
     }
 
