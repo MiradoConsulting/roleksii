@@ -1,7 +1,8 @@
 import robocode.*;
+import robocode.util.Utils;
 
 // CircleBot - a robot that moves in a big circle and shoots enemies
-public class CircleBot extends AdvancedRobot {
+public class ROLEKSII extends AdvancedRobot {
 
     // run method - main method for the robot
     public void run() {
